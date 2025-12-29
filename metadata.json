@@ -1,0 +1,7 @@
+{
+  "name": "Tanvi's 17th Birthday Realm",
+  "description": "A magical, interactive journey celebrating 17 years of Tanvi.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
