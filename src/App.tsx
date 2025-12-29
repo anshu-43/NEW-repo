@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Section } from './types';
-import Home from './components/Home.tsx';
-import Quiz from './components/Quiz.tsx';
-import MemoryGame from './components/MemoryGame.tsx';
-import ScienceQuiz from './components/ScienceQuiz.tsx';
-import ConfessionRoom from './components/ConfessionRoom.tsx';
-import MemoryVault from './components/MemoryVault.tsx';
-import SongLibrary from './components/SongLibrary.tsx';
-import ResetDialog from './components/ResetDialog.tsx';
+import Home from './components/Home';
+import Quiz from './components/Quiz';
+import MemoryGame from './components/MemoryGame';
+import ScienceQuiz from './components/ScienceQuiz';
+import ConfessionRoom from './components/ConfessionRoom';
+import MemoryVault from './components/MemoryVault';
+import SongLibrary from './components/SongLibrary';
+import ResetDialog from './components/ResetDialog';
 import { audioService } from './services/audioService';
 import { storageService } from './services/storageService';
 
