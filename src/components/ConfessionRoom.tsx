@@ -17,7 +17,7 @@ const ConfessionRoom: React.FC<ConfessionProps> = ({ preferences }) => {
     try {
       setLoading(true);
 
-      const res = await fetch("/.netlify/functions/gemini", {
+      const res = await fetch("/api/gemini", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
