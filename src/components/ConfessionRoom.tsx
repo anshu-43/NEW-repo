@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { generateBirthdayMessage } from '../services/geminiService';
 import { TARGET_DATE_STR } from '../constants';
 import { storageService } from '../services/storageService';
 
@@ -13,17 +12,47 @@ const ConfessionRoom: React.FC<ConfessionProps> = ({ preferences }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [elements, setElements] = useState<{id: number, left: number, delay: number, size: number}[]>([]);
 
-  useEffect(() => {
-    const fetchMessage = async () => {
+      useEffect(() => {
+  const fetchMessage = async () => {
+    try {
       setLoading(true);
-      const msg = await generateBirthdayMessage("Tanvi", 17, preferences);
-      setMessage(msg || '');
-      setLoading(false);
-      
-      // Autosave the generated message
-      if (msg) {
-        storageService.saveMemory('confession', "A Message from My Heart", msg);
+
+      const res = await fetch("/.netlify/functions/gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: `
+Write a heartfelt birthday confession letter for Tanvi who is turning 17.
+Preferences:
+${JSON.stringify(preferences)}
+`,
+        }),
+      });
+
+if (!res.ok) {
+  throw new Error("API failed");
+}
+
+      const data = await res.json();
+
+      setMessage(data.text ?? "");
+
+      // ✅ Autosave using NEW response
+      if (data.text) {
+        storageService.saveMemory(
+          "confession",
+          "A Message from My Heart",
+          data.text
+        );
       }
+
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      setMessage("Something went wrong 😔");
+    }
     };
     fetchMessage();
 
