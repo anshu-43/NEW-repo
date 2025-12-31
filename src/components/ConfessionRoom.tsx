@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { TARGET_DATE_STR } from '../constants';
 import { storageService } from '../services/storageService';
+import { generateLetter } from "../utils/letter";
 
 interface ConfessionProps {
   preferences: any;
@@ -13,49 +14,27 @@ const ConfessionRoom: React.FC<ConfessionProps> = ({ preferences }) => {
   const [elements, setElements] = useState<{id: number, left: number, delay: number, size: number}[]>([]);
 
       useEffect(() => {
-  const fetchMessage = async () => {
-    try {
-      setLoading(true);
+  setLoading(true);
 
-      const response = await fetch("/api/letter", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    tone: answers.tone,   // example: "romantic"
-    style: answers.style // example: "poetic"
-  })
-});
+  const letter = generateLetter(preferences);
+  setMessage(letter);
 
-const data = await response.json();
-setLetter(data.letter);
+  storageService.saveMemory(
+    "confession",
+    "A Message from My Heart",
+    letter
+  );
 
-      // ✅ Autosave using NEW response
-      if (data.text) {
-        storageService.saveMemory(
-          "confession",
-          "A Message from My Heart",
-          data.text
-        );
-      }
+  setLoading(false);
 
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      setMessage("Something went wrong 😔");
-    }
-    };
-    fetchMessage();
-
-    const newElements = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      delay: Math.random() * 10,
-      size: 14 + Math.random() * 16
-    }));
-    setElements(newElements);
-  }, [preferences]);
+  const newElements = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    delay: Math.random() * 10,
+    size: 14 + Math.random() * 16
+  }));
+  setElements(newElements);
+}, [preferences]);
 
   return (
     <div className="relative min-h-[75vh] flex flex-col items-center justify-center py-12 px-4 w-full">
