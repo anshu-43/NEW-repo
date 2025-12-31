@@ -16,15 +16,18 @@ export default async function handler(
       return res.status(400).json({ error: "Prompt is required" });
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_FINAL as string);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const genAI = new GoogleGenerativeAI(
+      process.env.GEMINI_API_KEY_FINAL as string
+    );
 
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);
+
     const text = result.response.text();
 
     return res.status(200).json({ text });
   } catch (error) {
-    console.error("Gemini API error:", error);
+    console.error("Gemini error:", error);
     return res.status(500).json({ error: "Failed to generate content" });
   }
 }
