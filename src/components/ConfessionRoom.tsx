@@ -17,27 +17,19 @@ const ConfessionRoom: React.FC<ConfessionProps> = ({ preferences }) => {
     try {
       setLoading(true);
 
-      const res = await fetch("/api/gemini", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: `
-Write a heartfelt birthday confession letter for Tanvi who is turning 17.
-Preferences:
-${JSON.stringify(preferences)}
-`,
-        }),
-      });
+      const response = await fetch("/api/letter", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    tone: answers.tone,   // example: "romantic"
+    style: answers.style // example: "poetic"
+  })
+});
 
-if (!res.ok) {
-  throw new Error("API failed");
-}
-
-      const data = await res.json();
-
-      setMessage(data.text ?? "");
+const data = await response.json();
+setLetter(data.letter);
 
       // ✅ Autosave using NEW response
       if (data.text) {
